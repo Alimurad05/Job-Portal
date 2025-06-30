@@ -1,0 +1,9 @@
+server:
+    port: 8084
+spring:
+    application:
+        name: job-portal
+
+    data:
+        mongodb:
+            uri: mongodb://alimurad:alimurad05@localhost:27017/jobportal?authSource=admin
