@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDTO {
-    private String id;
+    private Long id;
     @NotBlank(message = "Name cannot be blank")
     private String name;
     @Indexed(unique=true)
