@@ -15,8 +15,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO registerUser(UserDTO userDTO) {
+        if(userRepository.existsByEmail(userDTO.getEmail())){
+            throw new IllegalArgumentException("Email already exists");
+        }
         User user=userDTO.toEntity();
         user=userRepository.save(user);
-        return user.tpDto();
+        return user.toDto();
     }
 }

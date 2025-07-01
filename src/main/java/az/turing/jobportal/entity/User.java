@@ -2,6 +2,7 @@ package az.turing.jobportal.entity;
 
 import az.turing.jobportal.dto.AccountType;
 import az.turing.jobportal.dto.UserDTO;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,7 @@ public class User {
     private String email;
     private String password;
     private AccountType accountType;
-    public UserDTO tpDto(){
+    public UserDTO toDto(){
         return new UserDTO(this.id, this.name, this.email,this.password, this.accountType);
     }
 }
