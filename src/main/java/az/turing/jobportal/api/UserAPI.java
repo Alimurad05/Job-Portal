@@ -1,10 +1,12 @@
 package az.turing.jobportal.api;
 
 import az.turing.jobportal.dto.LoginDto;
+import az.turing.jobportal.dto.ResponseDto;
 import az.turing.jobportal.dto.UserDTO;
 import az.turing.jobportal.exception.JobPortalException;
 import az.turing.jobportal.service.UserService;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,11 @@ public class UserAPI {
     public ResponseEntity<LoginDto> loginUser(@RequestBody @Valid LoginDto loginDTO) throws JobPortalException {
         loginDTO = userService.loginUser(loginDTO);
         return new ResponseEntity<>(loginDTO,HttpStatus.CREATED);
+    }
+    @PostMapping("/sendOtp/{email}")
+    public ResponseEntity<ResponseDto> sendOtp(@PathVariable String email) throws JobPortalException{
+        userService.sendOtp(email);
+        return ResponseEntity<>(new ResponseDto("OTP sended succesfully"),HttpStatus.OK);
     }
 
 }

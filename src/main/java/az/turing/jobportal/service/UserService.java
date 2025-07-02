@@ -9,4 +9,5 @@ import org.springframework.stereotype.Service;
 public interface UserService {
     public UserDTO registerUser(UserDTO userDTO) throws JobPortalException;
     public LoginDto loginUser(LoginDto loginDTO) throws JobPortalException;
+    public Boolean sendOtp(String email) throws Exception;
 }

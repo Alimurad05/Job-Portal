@@ -7,3 +7,14 @@ spring:
     data:
         mongodb:
             uri: mongodb://alimurad:alimurad05@localhost:27017/jobportal?authSource=admin
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        username: alimurad.2334@gmail.com
+        password: ftoqftjgcgnztyqp
+        properties:
+            mail:
+                smtp:
+                    auth: true
+                    starttls:
+                        enable: true
