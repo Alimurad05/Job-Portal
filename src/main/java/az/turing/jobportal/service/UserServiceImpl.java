@@ -5,6 +5,7 @@ import az.turing.jobportal.dto.UserDTO;
 import az.turing.jobportal.entity.OTP;
 import az.turing.jobportal.entity.User;
 import az.turing.jobportal.exception.JobPortalException;
+import az.turing.jobportal.repo.OTPRepository;
 import az.turing.jobportal.repo.UserRepository;
 import az.turing.jobportal.utility.Utilities;
 import jakarta.mail.MessagingException;
@@ -22,6 +23,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     @Autowired
     private JavaMailSender javaMailSender;
+    @Autowired
+    private OTPRepository otpRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     public UserServiceImpl(UserRepository userRepository) {
@@ -55,9 +58,13 @@ public class UserServiceImpl implements UserService {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message,true);
         helper.setTo(email);
-        message.setSubject("Your OTP Code");
+        helper.setSubject("Your OTP Code");
         String otp = Utilities.generateOtp();
-        OTP otpEntity = new OTP(user.getId(),email,otp, LocalDateTime.now());
+        OTP otpEntity = new OTP(email,otp, LocalDateTime.now());
+        otpRepository.save(otpEntity);
+        helper.setText("Your OTP code is: " + otp,false);
+        javaMailSender.send(message);
+        return true;
         // You might want to save the OTP in the database or cache for verification later
     }
 

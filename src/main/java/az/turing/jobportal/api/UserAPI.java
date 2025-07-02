@@ -31,9 +31,9 @@ public class UserAPI {
         return new ResponseEntity<>(loginDTO,HttpStatus.CREATED);
     }
     @PostMapping("/sendOtp/{email}")
-    public ResponseEntity<ResponseDto> sendOtp(@PathVariable String email) throws JobPortalException{
+    public ResponseEntity<ResponseDto> sendOtp(@PathVariable String email) throws Exception{
         userService.sendOtp(email);
-        return ResponseEntity<>(new ResponseDto("OTP sended succesfully"),HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto("OTP sended succesfully"),HttpStatus.CREATED);
     }
 
 }

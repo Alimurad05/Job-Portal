@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class OTP {
     @Id
-    private String id;
     private String email;
     private String otpCode;
     private LocalDateTime expiryTime;
