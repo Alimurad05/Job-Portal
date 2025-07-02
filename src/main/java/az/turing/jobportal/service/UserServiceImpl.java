@@ -1,5 +1,6 @@
 package az.turing.jobportal.service;
 
+import az.turing.jobportal.dto.LoginDto;
 import az.turing.jobportal.dto.UserDTO;
 import az.turing.jobportal.entity.User;
 import az.turing.jobportal.exception.JobPortalException;
@@ -30,4 +31,13 @@ public class UserServiceImpl implements UserService {
         user=userRepository.save(user);
         return user.toDto();
     }
+    @Override
+    public LoginDto loginUser(LoginDto loginDTO) throws JobPortalException {
+        User user=userRepository.findByEmail(loginDTO.getEmail()).orElseThrow(()->new JobPortalException("User not found"));
+        if(!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())){
+            throw new JobPortalException("Invalid credentials");
+        }
+        return new LoginDto(user.getEmail(),user.getPassword());
+    }
+
 }
