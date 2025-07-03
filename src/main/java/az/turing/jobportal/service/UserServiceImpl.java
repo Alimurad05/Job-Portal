@@ -1,6 +1,7 @@
 package az.turing.jobportal.service;
 
 import az.turing.jobportal.dto.LoginDto;
+import az.turing.jobportal.dto.ResponseDto;
 import az.turing.jobportal.dto.UserDTO;
 import az.turing.jobportal.entity.OTP;
 import az.turing.jobportal.entity.User;
@@ -78,6 +79,14 @@ public class UserServiceImpl implements UserService {
         if(!(otpEntity.getOtpCode().equals(otp)))
             throw new JobPortalException("Invalid OTP");
         return true;
+    }
+    @Override
+    public ResponseDto changePassword(LoginDto loginDTO) throws JobPortalException {
+        User user = userRepository.findByEmail(loginDTO.getEmail())
+                .orElseThrow(() -> new JobPortalException("User not found"));
+        user.setPassword(passwordEncoder.encode(loginDTO.getPassword()));
+        userRepository.save(user);
+        return new ResponseDto("Password changed successfully");
     }
 
 }

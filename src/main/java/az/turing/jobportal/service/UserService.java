@@ -1,6 +1,7 @@
 package az.turing.jobportal.service;
 
 import az.turing.jobportal.dto.LoginDto;
+import az.turing.jobportal.dto.ResponseDto;
 import az.turing.jobportal.dto.UserDTO;
 import az.turing.jobportal.entity.OTP;
 import az.turing.jobportal.exception.JobPortalException;
@@ -12,5 +13,5 @@ public interface UserService {
     public LoginDto loginUser(LoginDto loginDTO) throws JobPortalException;
     public Boolean sendOtp(String email) throws Exception;
     public Boolean verifyOtp(String email, String otp) throws JobPortalException;
-
+    public ResponseDto changePassword(LoginDto loginDTO) throws JobPortalException;
 }

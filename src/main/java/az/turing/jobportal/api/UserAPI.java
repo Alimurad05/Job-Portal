@@ -36,10 +36,16 @@ public class UserAPI {
         return new ResponseEntity<>(new ResponseDto("OTP sent successfully"),HttpStatus.CREATED);
     }
     @GetMapping("/verifyOtp/{email}/{otp}")
-    public ResponseEntity<ResponseDto> sendOtp(@PathVariable String email,@PathVariable String otp)
+    public ResponseEntity<ResponseDto> verifyOtp(@PathVariable String email,@PathVariable String otp)
             throws Exception{
         userService.verifyOtp(email,otp);
         return new ResponseEntity<>(new ResponseDto("OTP has been verified"),HttpStatus.OK);
+    }
+    @PostMapping("/changePassword")
+    public ResponseEntity<ResponseDto> changePassword(@RequestBody @Valid LoginDto loginDTO)
+            throws JobPortalException{
+        return new ResponseEntity<>(userService.changePassword(loginDTO),HttpStatus.OK);
+
     }
 
 }
