@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
     private OTPRepository otpRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -34,38 +35,49 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO registerUser(UserDTO userDTO) throws JobPortalException {
-        if(userRepository.existsByEmail(userDTO.getEmail())){
+        if (userRepository.existsByEmail(userDTO.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
         userDTO.setId(Utilities.getNextSequence("users"));
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        User user=userDTO.toEntity();
-        user=userRepository.save(user);
+        User user = userDTO.toEntity();
+        user = userRepository.save(user);
         return user.toDto();
     }
+
     @Override
     public LoginDto loginUser(LoginDto loginDTO) throws JobPortalException {
-        User user=userRepository.findByEmail(loginDTO.getEmail()).orElseThrow(()->new JobPortalException("User not found"));
-        if(!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())){
+        User user = userRepository.findByEmail(loginDTO.getEmail()).orElseThrow(() -> new JobPortalException("User not found"));
+        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
             throw new JobPortalException("Invalid credentials");
         }
-        return new LoginDto(user.getEmail(),user.getPassword());
+        return new LoginDto(user.getEmail(), user.getPassword());
     }
+
     @Override
     public Boolean sendOtp(String email) throws Exception {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new JobPortalException("User not found"));
         MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message,true);
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(email);
         helper.setSubject("Your OTP Code");
         String otp = Utilities.generateOtp();
-        OTP otpEntity = new OTP(email,otp, LocalDateTime.now());
+        OTP otpEntity = new OTP(email, otp, LocalDateTime.now());
         otpRepository.save(otpEntity);
-        helper.setText("Your OTP code is: " + otp,false);
+        helper.setText("Your OTP code is: " + otp, false);
         javaMailSender.send(message);
         return true;
-        // You might want to save the OTP in the database or cache for verification later
+
+    }
+
+    @Override
+    public Boolean verifyOtp(String email, String otp) throws JobPortalException {
+        OTP otpEntity = otpRepository.findById(email).
+                orElseThrow(() -> new JobPortalException("OTP not found"));
+        if(!(otpEntity.getOtpCode().equals(otp)))
+            throw new JobPortalException("Invalid OTP");
+        return true;
     }
 
 }
